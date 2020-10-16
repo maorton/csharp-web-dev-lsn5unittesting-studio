@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace BalancedBracketsNS
 {
@@ -25,19 +28,40 @@ namespace BalancedBracketsNS
         */
         public static bool HasBalancedBrackets(String str)
         {
-            int brackets = 0;
-            foreach (char ch in str.ToCharArray())
+            Dictionary<char, char> bracketPair = new Dictionary<char, char> { { '[', ']' } };
+            Stack<char> bracketStack = new Stack<char>();
+            
+           // int brackets = 0;
+            try
             {
-                if (ch == '[')
+                foreach (char ch in str.ToCharArray())
                 {
-                    brackets++;
-                }
-                else if (ch == ']')
-                {
-                    brackets--;
+                    if (bracketPair.Keys.Contains(ch))
+                    {
+                        bracketStack.Push(ch);
+                    }
+                    else if (bracketPair.Values.Contains(ch))
+                    {
+                        if (ch == bracketPair[bracketStack.First()])
+                        {
+                            bracketStack.Pop();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
-            return brackets == 0;
+            catch
+            {
+                return false;
+            }
+            return bracketStack.Count == 0;
         }
     }
 }
